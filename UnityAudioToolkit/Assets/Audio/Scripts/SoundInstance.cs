@@ -34,6 +34,7 @@ namespace AudioToolkit
             refVolume = _refVolume;
 
             source.maxDistance = parentSound.MaxDistance;
+            source.outputAudioMixerGroup = parentSound.Output;
             source.clip = _clip;
             source.loop = _loop;
             source.pitch = _pitch;

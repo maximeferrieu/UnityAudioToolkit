@@ -5,20 +5,20 @@ using UnityEngine.Audio;
 
 namespace AudioToolkit
 {
-    [RequireComponent(typeof(SoundEmitter))]
+    [RequireComponent(typeof(SoundPlayer))]
     public class Sound : MonoBehaviour
     {
-        SoundEmitter emitter;
+        SoundPlayer _soundPlayer;
 
-        SoundEmitter Emitter
+        SoundPlayer soundPlayer
         {
             get
             {
-                if (emitter == null)
+                if (_soundPlayer == null)
                 {
-                    emitter = GetComponent<SoundEmitter>();
+                    _soundPlayer = GetComponent<SoundPlayer>();
                 }
-                return emitter;
+                return _soundPlayer;
             }
         }
 
@@ -149,6 +149,8 @@ namespace AudioToolkit
             // GRANULAR
             else if (PlaybackMode == SoundPlaybackMode.Granular)
             {
+                RandomStartPosition = false;
+
                 if (!isPlaying)
                 {
                     Granulate();
@@ -237,7 +239,7 @@ namespace AudioToolkit
 
             if (OverridePositionToListener)
             {
-                return Emitter.ListenerPosition + _offsetPosition;
+                return soundPlayer.ListenerPosition + _offsetPosition;
             }
             return transform.position + _offsetPosition;
         }
