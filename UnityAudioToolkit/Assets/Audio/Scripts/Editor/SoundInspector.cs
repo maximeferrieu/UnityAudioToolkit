@@ -19,22 +19,29 @@ namespace AudioToolkit
 
         public override void OnInspectorGUI()
         {
-            Header();
-
+            if (Application.isPlaying)
+            {
+                PlayHeader();
+            }
+            else
+            {
+                Header();
+            }
+            
             if (ShowProperties)
             {
                 Settings();
             }
         }
 
-        bool ShowProperties = false;
+        bool ShowProperties;
 
-        bool ShowClips = false;
+        bool ShowClips;
 
         void Header()
         {
             GUILayout.BeginHorizontal();
-            EditorGUILayout.TextField(Target.Name);
+            Target.Name = EditorGUILayout.TextField(Target.Name);
 
             if (!ShowProperties)
             {
@@ -51,6 +58,48 @@ namespace AudioToolkit
                 }
             }
             
+
+            GUILayout.EndHorizontal();
+        }
+
+        bool soundIsPlaying;
+
+        void PlayHeader()
+        {
+            GUILayout.BeginHorizontal();
+            Target.Name = EditorGUILayout.TextField(Target.Name);
+
+            if (Target.PlaybackMode != SoundPlaybackMode.OneShot)
+            {
+                if (!soundIsPlaying)
+                {
+                    if (GUILayout.Button("Play", GUILayout.Width(75f)))
+                    {
+                        Target.OverridePositionToListener = true;
+                        Target.Play();
+                        soundIsPlaying = true;
+                    }
+                }
+                else
+                {
+                    if (GUILayout.Button("Stop", GUILayout.Width(75f)))
+                    {
+                        Target.OverridePositionToListener = false;
+                        Target.Stop();
+                        soundIsPlaying = false;
+                    }
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("Play", GUILayout.Width(75f)))
+                {
+                    Target.OverridePositionToListener = true;
+                    Target.Play();
+                }
+            }
+            
+
 
             GUILayout.EndHorizontal();
         }
@@ -79,6 +128,14 @@ namespace AudioToolkit
                 Target.MinDelay = 0f;
             if (Target.MinDelay > Target.MaxDelay)
                 Target.MinDelay = Target.MaxDelay;
+
+            Target.FadeInTime = EditorGUILayout.FloatField("FadeIn Time", Target.FadeInTime);
+            if (Target.FadeInTime < 0f)
+                Target.FadeInTime = 0f;
+
+            Target.FadeOutTime = EditorGUILayout.FloatField("Fadeout Time", Target.FadeOutTime);
+            if (Target.FadeOutTime < 0f)
+                Target.FadeOutTime = 0f;
 
             Target.MaxVolume = EditorGUILayout.FloatField("Max Volume", Target.MaxVolume);
             if (Target.MaxVolume > 1f)
