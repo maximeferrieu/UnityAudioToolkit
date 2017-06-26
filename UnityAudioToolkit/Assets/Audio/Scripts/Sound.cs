@@ -5,7 +5,6 @@ using UnityEngine.Audio;
 
 namespace AudioToolkit
 {
-    [RequireComponent(typeof(SoundPlayer))]
     public class Sound : MonoBehaviour
     {
         SoundPlayer _soundPlayer;
