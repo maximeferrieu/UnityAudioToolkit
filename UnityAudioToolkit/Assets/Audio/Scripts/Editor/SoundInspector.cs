@@ -139,7 +139,7 @@ namespace AudioToolkit
             if (Target.MinSpawnTime > Target.MaxSpawnTime)
                 Target.MinSpawnTime = Target.MaxSpawnTime;
 
-            Target.OverridePositionToListener = EditorGUILayout.Toggle("Spawn On Listener", Target.RandomStartPosition);
+            Target.OverridePositionToListener = EditorGUILayout.Toggle("Spawn On Listener", Target.OverridePositionToListener);
 
             Target.GranularSpawnPositionRandomness = EditorGUILayout.Slider("Position Randomness", Target.GranularSpawnPositionRandomness, 0f, 1f);
         }
