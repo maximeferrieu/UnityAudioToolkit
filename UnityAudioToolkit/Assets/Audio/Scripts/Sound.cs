@@ -116,6 +116,10 @@ namespace AudioToolkit
 
         void PlayWithDelay()
         {
+            if (stopConfirmed)
+            {
+                Stop();
+            }
             // ONE SHOT
             if (PlaybackMode == SoundPlaybackMode.OneShot)
             {
@@ -156,6 +160,8 @@ namespace AudioToolkit
 
         public void Stop()
         {
+            stopConfirmed = true;
+
             // ONE SHOT
             if (PlaybackMode == SoundPlaybackMode.OneShot)
             {
@@ -260,9 +266,7 @@ namespace AudioToolkit
         }
 
         IEnumerator FadeOut()
-        {
-            stopConfirmed = true;
-
+        {           
             if (FadeInCoroutine != null)
             {
                 StopCoroutine(FadeInCoroutine);
