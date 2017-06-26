@@ -106,6 +106,7 @@ namespace AudioToolkit
 
         void Settings()
         {
+            //PARAMETERS
             GUILayout.Space(5f);
             EditorGUILayout.LabelField("PARAMETERS", EditorStyles.boldLabel);
 
@@ -119,6 +120,18 @@ namespace AudioToolkit
             if (Target.MaxDistance < 1f)
                 Target.MaxDistance = 1f;
 
+            // FADES
+            GUILayout.Space(10f);
+
+            Target.FadeInTime = EditorGUILayout.Slider("FadeIn Time", Target.FadeInTime, 0f, 30f);
+
+            Target.FadeOutTime = EditorGUILayout.Slider("FadeOut Time", Target.FadeOutTime, 0f, 30f);
+
+            // DELAY
+            GUILayout.Space(10f);
+
+            EditorGUILayout.MinMaxSlider("Delay", ref Target.MinDelay, ref Target.MaxDelay, 0f, 30f);
+
             Target.MaxDelay = EditorGUILayout.FloatField("Max Delay", Target.MaxDelay);
             if (Target.MaxDelay < Target.MinDelay)
                 Target.MaxDelay = Target.MinDelay;
@@ -129,13 +142,10 @@ namespace AudioToolkit
             if (Target.MinDelay > Target.MaxDelay)
                 Target.MinDelay = Target.MaxDelay;
 
-            Target.FadeInTime = EditorGUILayout.FloatField("FadeIn Time", Target.FadeInTime);
-            if (Target.FadeInTime < 0f)
-                Target.FadeInTime = 0f;
+            // VOLUME
+            GUILayout.Space(10f);
 
-            Target.FadeOutTime = EditorGUILayout.FloatField("Fadeout Time", Target.FadeOutTime);
-            if (Target.FadeOutTime < 0f)
-                Target.FadeOutTime = 0f;
+            EditorGUILayout.MinMaxSlider("Volume", ref Target.MinVolume, ref Target.MaxVolume, 0f, 1f);
 
             Target.MaxVolume = EditorGUILayout.FloatField("Max Volume", Target.MaxVolume);
             if (Target.MaxVolume > 1f)
@@ -149,6 +159,13 @@ namespace AudioToolkit
             if (Target.MinVolume > Target.MaxVolume)
                 Target.MinVolume = Target.MaxVolume;
 
+            // PITCH
+            GUILayout.Space(10f);
+
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.MinMaxSlider("Pitch", ref Target.MinPitch, ref Target.MaxPitch, 0.1f, 3f);
+            GUILayout.EndHorizontal();
+
             Target.MaxPitch = EditorGUILayout.FloatField("Max Pitch", Target.MaxPitch);
             if (Target.MaxPitch > 3f)
                 Target.MaxPitch = 3f;
@@ -161,6 +178,7 @@ namespace AudioToolkit
             if (Target.MinPitch > Target.MaxPitch)
                 Target.MinPitch = Target.MaxPitch;
 
+            // PLAYBACK SPECIFICS
             if (Target.PlaybackMode == SoundPlaybackMode.Loop)
             {
                 LoopSettings();
