@@ -133,6 +133,8 @@ namespace AudioToolkit
             EditorGUILayout.MinMaxSlider("Delay", ref Target.MinDelay, ref Target.MaxDelay, 0f, 30f);
 
             Target.MaxDelay = EditorGUILayout.FloatField("Max Delay", Target.MaxDelay);
+            if (Target.MaxDelay > 30f)
+                Target.MaxDelay = 30f;
             if (Target.MaxDelay < Target.MinDelay)
                 Target.MaxDelay = Target.MinDelay;
 
