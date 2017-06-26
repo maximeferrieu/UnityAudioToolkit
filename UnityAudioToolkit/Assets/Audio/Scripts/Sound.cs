@@ -5,6 +5,7 @@ using UnityEngine.Audio;
 
 namespace AudioToolkit
 {
+    [RequireComponent(typeof(SoundEmitter))]
     public class Sound : MonoBehaviour
     {
         SoundEmitter emitter;
@@ -109,6 +110,11 @@ namespace AudioToolkit
         float fadeFactor = 0f;
 
         public void Play()
+        {
+            Invoke("PlayWithDelay", Random.Range(MinDelay, MaxDelay));
+        }
+
+        void PlayWithDelay()
         {
             // ONE SHOT
             if (PlaybackMode == SoundPlaybackMode.OneShot)

@@ -47,10 +47,27 @@ namespace AudioToolkit
             _sound.Play();
         }
 
+        public void PlayAll()
+        {
+            foreach (Sound _sound in Sounds)
+            {
+                _sound.Play();
+            }
+        }
+
+
         public void Stop(string soundName)
         {
             Sound _sound = GetSound(soundName);
             _sound.Stop();
+        }
+
+        public void StopAll()
+        {
+            foreach (Sound _sound in Sounds)
+            {
+                _sound.Stop();
+            }
         }
 
         Sound GetSound(string soundName)
