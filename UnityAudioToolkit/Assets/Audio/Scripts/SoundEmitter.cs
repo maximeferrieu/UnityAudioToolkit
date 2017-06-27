@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace AudioToolkit
@@ -25,16 +24,33 @@ namespace AudioToolkit
         {
             get
             {
-                List<float> _maxDistances = new List<float>();
-
-                foreach (Sound _sound in Sounds)
+                if (maxDistance == 0f)
                 {
-                    _maxDistances.Add(_sound.MaxDistance);
+                    List<float> _maxDistances = new List<float>();
+
+                    foreach (Sound _sound in Sounds)
+                    {
+                        _maxDistances.Add(_sound.MaxDistance);
+                    }
+
+                    float _max = 0f;
+
+                    foreach (float _distance in _maxDistances)
+                    {
+                        if (_distance > _max)
+                        {
+                            _max = _distance;
+                        }
+                    }
+
+                    maxDistance =  _max;
                 }
 
-                return _maxDistances.Max();
-            }
+                return maxDistance;               
+               }
         }
+
+        float maxDistance;
 
         public string ColliderTag;
 
@@ -65,6 +81,45 @@ namespace AudioToolkit
                     _sound.Stop();
                 }
             }
+        }
+
+        Sound[] GizmosSounds
+        {
+            get
+            {
+                return GetComponents<Sound>();
+            }
+        }
+
+        float GizmosMaxDistance
+        {
+            get
+            {
+                List<float> _maxDistances = new List<float>();
+
+                foreach (Sound _sound in GizmosSounds)
+                {
+                    _maxDistances.Add(_sound.MaxDistance);
+                }
+
+                float _max = 0f;
+
+                foreach (float _distance in _maxDistances)
+                {
+                    if (_distance > _max)
+                    {
+                        _max = _distance;
+                    }
+                }
+                return _max;
+            }
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            Gizmos.color = new Color(0f, 1f, 1f, 0.3f);
+            Gizmos.DrawSphere(transform.position, GizmosMaxDistance);
+            Gizmos.DrawWireSphere(transform.position, GizmosMaxDistance);
         }
     }
 }
