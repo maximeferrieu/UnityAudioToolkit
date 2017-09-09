@@ -7,9 +7,17 @@ namespace AudioToolkit
 {
     public class Sound : MonoBehaviour
     {
-        SoundPlayer _soundPlayer;
+        #region Editor properties
 
-        SoundPlayer soundPlayer
+        /// <summary>
+        /// The name of this Sound
+        /// </summary>
+        public string Name = "New Sound";
+
+        /// <summary>
+        /// Local reference to the object SoundPlayer
+        /// </summary>
+        SoundPlayer SoundPlayer
         {
             get
             {
@@ -21,16 +29,34 @@ namespace AudioToolkit
             }
         }
 
-        public string Name = "New Sound";
+        /// <summary>
+        /// Private setter for SoundPlayer
+        /// </summary>
+        SoundPlayer _soundPlayer;
 
+        /// <summary>
+        /// Is this sound a OneShot, Loop or Granular?
+        /// </summary>
         public SoundPlaybackMode PlaybackMode;
 
+        /// <summary>
+        /// The Prefab containing the AudioSource with the desired attenuation
+        /// </summary>
         public GameObject AttenuationPrefab;
 
+        /// <summary>
+        /// The OutputMixerGroup this sound is routed to
+        /// </summary>
         public AudioMixerGroup Output;
 
+        /// <summary>
+        /// The Max Distance attenuation for this sound
+        /// </summary>
         public float MaxDistance = 100f;
 
+        /// <summary>
+        /// The list containing all the clip that might be played
+        /// </summary>
         public List<AudioClip> Clips;
 
         public float MinDelay = 0f;
@@ -59,118 +85,22 @@ namespace AudioToolkit
 
         public bool RandomStartPosition = false;
 
-        bool stopConfirmed = false;
+        #endregion
 
-        AudioClip randomClip
-        {
-            get
-            {
-                return Clips[Random.Range(0, Clips.Count)];
-            }
-        }
+        #region Public methods
 
-        float refVolume
-        {
-            get
-            {
-                return Random.Range(MinVolume, MaxVolume);
-            }
-        }
-
-        float refPitch
-        {
-            get
-            {
-                return Random.Range(MinPitch, MaxPitch);
-            }
-        }
-
-        [HideInInspector]
-        public List<SoundInstance> PlayingInstances;
-
-        [HideInInspector]
-        public float FadeFactor
-        {
-            get
-            {
-                return fadeFactor;
-            }
-        }
-
-        [HideInInspector]
-        public bool Fading;
-
-        public bool isPlaying = false;
-
-        Coroutine FadeInCoroutine;
-
-        Coroutine FadeOutCoroutine;
-
-        float fadeFactor = 0f;
-
+        /// <summary>
+        /// The Parent method for playing this sound. 
+        /// Delays the Play() Execution.
+        /// </summary>
         public void Play()
         {
             Invoke("PlayWithDelay", Random.Range(MinDelay, MaxDelay));
         }
 
-        void PlayWithDelay()
-        {
-            if (stopConfirmed)
-            {
-                Stop();
-            }
-
-            Vector3 _spanwPosition;
-
-            if (!OverridePositionToListener)
-            {
-                _spanwPosition = transform.position;
-            }
-            else
-            {
-                _spanwPosition = soundPlayer.ListenerPosition;
-            }
-
-            // ONE SHOT
-            if (PlaybackMode == SoundPlaybackMode.OneShot)
-            {
-                RandomStartPosition = false;
-
-                SoundInstance _instance = SpawnInstance(_spanwPosition).Initialize
-                                                    (this, randomClip, false, refVolume, refPitch);
-                _instance.Play();
-
-                isPlaying = true;
-            }
-
-            // LOOP
-            else if (PlaybackMode == SoundPlaybackMode.Loop)
-            {
-                if (!isPlaying)
-                {
-                    SoundInstance _instance = SpawnInstance(_spanwPosition).Initialize
-                                                        (this, randomClip, true, refVolume, refPitch);
-                    _instance.Play();
-                    
-                }
-                FadeInCoroutine = StartCoroutine(FadeIn());
-                isPlaying = true;
-            }
-
-            // GRANULAR
-            else if (PlaybackMode == SoundPlaybackMode.Granular)
-            {
-                RandomStartPosition = false;
-
-                if (!isPlaying)
-                {
-                    Granulate();
-                }
-                FadeInCoroutine = StartCoroutine(FadeIn());
-                isPlaying = true;
-            }
-        }
-
+        /// <summary>
+        /// The Parent method for stopping this sound
+        /// </summary>
         public void Stop()
         {
             stopConfirmed = true;
@@ -197,6 +127,68 @@ namespace AudioToolkit
             }
         }
 
+        #endregion
+
+        #region Private properties & methods
+
+        void PlayWithDelay()
+        {
+            if (stopConfirmed)
+            {
+                Stop();
+            }
+
+            Vector3 _spanwPosition;
+
+            if (!OverridePositionToListener)
+            {
+                _spanwPosition = transform.position;
+            }
+            else
+            {
+                _spanwPosition = SoundPlayer.ListenerPosition;
+            }
+
+            // ONE SHOT
+            if (PlaybackMode == SoundPlaybackMode.OneShot)
+            {
+                RandomStartPosition = false;
+
+                SoundInstance _instance = SpawnInstance(_spanwPosition).Initialize
+                                                    (this, randomClip, false, refVolume, refPitch);
+                _instance.Play();
+
+                isPlaying = true;
+            }
+
+            // LOOP
+            else if (PlaybackMode == SoundPlaybackMode.Loop)
+            {
+                if (!isPlaying)
+                {
+                    SoundInstance _instance = SpawnInstance(_spanwPosition).Initialize
+                                                        (this, randomClip, true, refVolume, refPitch);
+                    _instance.Play();
+
+                }
+                FadeInCoroutine = StartCoroutine(FadeIn());
+                isPlaying = true;
+            }
+
+            // GRANULAR
+            else if (PlaybackMode == SoundPlaybackMode.Granular)
+            {
+                RandomStartPosition = false;
+
+                if (!isPlaying)
+                {
+                    Granulate();
+                }
+                FadeInCoroutine = StartCoroutine(FadeIn());
+                isPlaying = true;
+            }
+        }
+
         SoundInstance SpawnInstance(Vector3 position)
         {
             GameObject _instanceObj = (GameObject)Instantiate(AttenuationPrefab, position, Quaternion.identity);
@@ -206,6 +198,52 @@ namespace AudioToolkit
             SoundInstance _instance = _instanceObj.AddComponent<SoundInstance>();
             return _instance;
         }
+
+        bool stopConfirmed = false;
+
+        AudioClip randomClip
+        {
+            get
+            {
+                return Clips[Random.Range(0, Clips.Count)];
+            }
+        }
+
+        float refVolume
+        {
+            get
+            {
+                return Random.Range(MinVolume, MaxVolume);
+            }
+        }
+
+        float refPitch
+        {
+            get
+            {
+                return Random.Range(MinPitch, MaxPitch);
+            }
+        }
+
+        public List<SoundInstance> PlayingInstances;
+
+        public float FadeFactor
+        {
+            get
+            {
+                return fadeFactor;
+            }
+        }
+
+        public bool Fading;
+
+        public bool isPlaying = false;
+
+        Coroutine FadeInCoroutine;
+
+        Coroutine FadeOutCoroutine;
+
+        float fadeFactor = 0f;
 
         void DestroyInstances()
         {
@@ -250,7 +288,7 @@ namespace AudioToolkit
 
             if (OverridePositionToListener)
             {
-                return soundPlayer.ListenerPosition + _offsetPosition;
+                return SoundPlayer.ListenerPosition + _offsetPosition;
             }
             return transform.position + _offsetPosition;
         }
@@ -313,6 +351,8 @@ namespace AudioToolkit
                 }
             }
         }
+
+        #endregion
     }
 
     public enum SoundPlaybackMode

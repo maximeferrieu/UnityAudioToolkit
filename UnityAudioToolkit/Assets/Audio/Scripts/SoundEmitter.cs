@@ -6,11 +6,16 @@ namespace AudioToolkit
 {
     public class SoundEmitter : SoundPlayer
     {
-        public float MaxDistance
+        /// <summary>
+        /// The Tag of the ListenerObject.
+        /// </summary>
+        public string ColliderTag;
+
+        float MaxDistance
         {
             get
             {
-                if (maxDistance == 0f)
+                if (_maxDistance == 0f)
                 {
                     List<float> _maxDistances = new List<float>();
 
@@ -29,18 +34,16 @@ namespace AudioToolkit
                         }
                     }
 
-                    maxDistance =  _max;
+                    _maxDistance =  _max;
                 }
 
-                return maxDistance;               
+                return _maxDistance;               
                }
         }
 
-        float maxDistance;
+        float _maxDistance;
 
-        public string ColliderTag;
-
-        public void Start()
+        void Start()
         {
             SphereCollider _sphere = gameObject.AddComponent<SphereCollider>();
             _sphere.isTrigger = true;

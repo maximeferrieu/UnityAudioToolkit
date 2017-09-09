@@ -6,6 +6,9 @@ namespace AudioToolkit
 {
     public class SoundPlayer : MonoBehaviour
     {
+        /// <summary>
+        /// Returns all the Sound components on this object
+        /// </summary>
         public Sound[] Sounds
         {
             get
@@ -20,6 +23,9 @@ namespace AudioToolkit
 
         Sound[] sounds;
 
+        /// <summary>
+        /// Returns a reference of the AudioListener in the scene
+        /// </summary>
         public AudioListener Listener
         {
             get
@@ -33,6 +39,9 @@ namespace AudioToolkit
 
         AudioListener listener;
 
+        /// <summary>
+        /// Returns the listener position as a Vector3
+        /// </summary>
         public Vector3 ListenerPosition
         {
             get
@@ -41,12 +50,19 @@ namespace AudioToolkit
             }
         }          
 
+        /// <summary>
+        /// Plays a Sound component
+        /// </summary>
+        /// <param name="soundName">The name of the Sound component to Play</param>
         public void Play(string soundName)
         {
             Sound _sound = GetSound(soundName);
             _sound.Play();
         }
 
+        /// <summary>
+        /// Play all the Sound components on the object
+        /// </summary>
         public void PlayAll()
         {
             foreach (Sound _sound in Sounds)
@@ -55,12 +71,19 @@ namespace AudioToolkit
             }
         }
 
+        /// <summary>
+        /// Stops a Sound component
+        /// </summary>
+        /// <param name="soundName">The name of the Sound component to stop</param>
         public void Stop(string soundName)
         {
             Sound _sound = GetSound(soundName);
             _sound.Stop();
         }
 
+        /// <summary>
+        /// Stop All the playing Sound components on this Object
+        /// </summary>
         public void StopAll()
         {
             foreach (Sound _sound in Sounds)
