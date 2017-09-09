@@ -119,12 +119,24 @@ namespace AudioToolkit
             {
                 Stop();
             }
+
+            Vector3 _spanwPosition;
+
+            if (!OverridePositionToListener)
+            {
+                _spanwPosition = transform.position;
+            }
+            else
+            {
+                _spanwPosition = soundPlayer.ListenerPosition;
+            }
+
             // ONE SHOT
             if (PlaybackMode == SoundPlaybackMode.OneShot)
             {
                 RandomStartPosition = false;
 
-                SoundInstance _instance = SpawnInstance(transform.position).Initialize
+                SoundInstance _instance = SpawnInstance(_spanwPosition).Initialize
                                                     (this, randomClip, false, refVolume, refPitch);
                 _instance.Play();
 
@@ -136,7 +148,7 @@ namespace AudioToolkit
             {
                 if (!isPlaying)
                 {
-                    SoundInstance _instance = SpawnInstance(transform.position).Initialize
+                    SoundInstance _instance = SpawnInstance(_spanwPosition).Initialize
                                                         (this, randomClip, true, refVolume, refPitch);
                     _instance.Play();
                     

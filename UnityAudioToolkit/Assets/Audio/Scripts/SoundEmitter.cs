@@ -4,22 +4,8 @@ using UnityEngine;
 
 namespace AudioToolkit
 {
-    public class SoundEmitter : MonoBehaviour
+    public class SoundEmitter : SoundPlayer
     {
-        public Sound[] Sounds
-        {
-            get
-            {
-                if (sounds == null)
-                {
-                    sounds = gameObject.GetComponents<Sound>();
-                }
-                return sounds;
-            }
-        }
-
-        Sound[] sounds;
-
         public float MaxDistance
         {
             get
@@ -65,10 +51,7 @@ namespace AudioToolkit
         {
             if (col.tag == ColliderTag)
             {
-                foreach (Sound _sound in Sounds)
-                {
-                    _sound.Play();
-                }
+                PlayAll();
             }
         }
 
@@ -78,7 +61,7 @@ namespace AudioToolkit
             {
                 foreach (Sound _sound in Sounds)
                 {
-                    _sound.Stop();
+                    StopAll();
                 }
             }
         }
