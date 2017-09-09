@@ -283,20 +283,23 @@ namespace AudioToolkit
         }
 
         void ClipsList()
-        {           
-            for (int i = 0; i < Target.Clips.Count; i++)
+        {
+            if (Target.Clips.Count > 0)
             {
-                GUILayout.BeginHorizontal();
-
-                Target.Clips[i] = (AudioClip)EditorGUILayout.ObjectField(Target.Clips[i], typeof(AudioClip), false);
-
-                if (GUILayout.Button("Del", GUILayout.Width(50f)))
+                for (int i = 0; i < Target.Clips.Count; i++)
                 {
-                    Target.Clips.Remove(Target.Clips[i]);
-                }
+                    GUILayout.BeginHorizontal();
 
-                GUILayout.EndHorizontal();
-            }
+                    Target.Clips[i] = (AudioClip)EditorGUILayout.ObjectField(Target.Clips[i], typeof(AudioClip), false);
+
+                    if (GUILayout.Button("Del", GUILayout.Width(50f)))
+                    {
+                        Target.Clips.Remove(Target.Clips[i]);
+                    }
+
+                    GUILayout.EndHorizontal();
+                }
+            }             
         }
     }
 }
